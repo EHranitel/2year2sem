@@ -15,9 +15,13 @@ void createAndFillFileWithHashTable(std::string name, int* tableLens)
 
 int main()
 {
-    hashTable table0(0);
-    hashTable table1(1);
-    hashTable table2(2);
+    hashTable table0;
+    hashTable table1;
+    hashTable table2;
+
+    table0.hash = &standartHash;
+    table1.hash = &hash1;
+    table2.hash = &hash2;
 
     table0.fillFromFile("Text.txt");
     table1.fillFromFile("Text.txt");

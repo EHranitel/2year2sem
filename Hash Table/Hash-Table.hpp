@@ -4,64 +4,40 @@
 #include <list>
 #include <fstream>
 
-class hashContainer
+int standartHash(std::string word)
 {
-    public:
-        int hash(std::string word, int currentHash)
-        {
-            if (currentHash == 1)
-            {
-                return hash1(word);
-            }
+    return abs(std::hash<std::string>{}(word));
+}
 
-            if (currentHash == 2)
-            {
-                return hash2(word);
-            }
+int hash1(std::string word)
+{
+    return (word[0] + word[word.length() - 1]) / 2;
+}
 
-            return standartHash(word);
-        }
+int hash2(std::string word)
+{
+    int hash = word[0] * 997;
 
-        int standartHash(std::string word)
-        {
-            return abs(std::hash<std::string>{}(word));
-        }
+    int len = word.length();
 
-        int hash1(std::string word)
-        {
-            return (word[0] + word[word.length() - 1]) / 2;
-        }
+    for (int i = 1; i < len; i++)
+    {
+        hash = ((hash + word[i]) * 997) % 26;
+    }
 
-        int hash2(std::string word)
-        {
-            int hash = word[0] * 997;
-
-            int len = word.length();
-
-            for (int i = 1; i < len; i++)
-            {
-                hash = ((hash + word[i]) * 997) % 26;
-            }
-
-            return hash;
-        }
-};
+    return hash;
+}
 
 class hashTable
 {
     private:
         std::array<std::list<std::string>, 26> table;
         int tableLens[26];
-        
-        hashContainer container;
-
-        int currentHash = 0;
 
     public:
-        hashTable(int hashNumber)
-        {
-            currentHash = hashNumber;   
-        }
+        int (*hash) (std::string word);
+
+        hashTable(){}
 
         int* get()
         {          
@@ -75,7 +51,7 @@ class hashTable
 
         void add(std::string word)
         {
-            table[container.hash(word, currentHash) % 26].push_front(word);
+            table[hash(word) % 26].push_front(word);
         }
 
         void fillFromFile(const char* Name)
@@ -115,4 +91,5 @@ class hashTable
 
         ~hashTable(){}
 };
+
  
